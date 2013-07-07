@@ -1,5 +1,5 @@
 - Song
-[] Create Song class replacement
+[] Create Song class replacement (Current is horrible.)
 - Other
 [] Utility function to get current song
 [] Add ability to use sqlite in Cursor (for testing)

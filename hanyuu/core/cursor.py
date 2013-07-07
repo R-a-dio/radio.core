@@ -1,6 +1,7 @@
 from __future__ import unicode_literals
 from __future__ import absolute_import
 import Queue
+import functools
 
 import pymysql
 import pymysql.cursors
@@ -21,13 +22,13 @@ class Cursor(object):
     """
     _cache = Queue.Queue(maxsize=5)
 
-    def __init__(self, cursor_type=MySQLdb.cursors.Cursor):
+    def __init__(self, cursor_type=pymysql.cursors.Cursor):
         super(Cursor, self).__init__()
 
         try:
             conn = self._cache.get_nowait()
         except Queue.Empty:
-            conn = MySQLdb.connect(
+            conn = pymysql.connect(
                 host=config.get("database.host", None),
                 user=config.get("database.user", None),
                 passwd=config.get("database.pass", None),
@@ -51,3 +52,6 @@ class Cursor(object):
             self._cache.put_nowait(self.conn)
         except Queue.Full:
             self.conn.close()
+
+
+DictCursor = functools.partial(Cursor, cursor_type=pymysql.cursors.DictCursor)
