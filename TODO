@@ -1,0 +1,9 @@
+- Song
+[] Create Song class replacement
+- Other
+[] Utility function to get current song
+[] Add ability to use sqlite in Cursor (for testing)
+[] Properly export required packages.
+[] Make core __init__ load configuration file
+- Queue
+[] Add queue filling when it is empty to Queue

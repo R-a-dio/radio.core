@@ -14,7 +14,6 @@ RequestSong = namedtuple("RequestSong", ("song", "requester"))
 class Queue(object):
     REGULAR = 0
     REQUEST = 1
-    POPPED = 2
 
     @staticmethod
     def _calculate_timestamp():
@@ -74,8 +73,8 @@ class Queue(object):
                 song = Song(track, meta, length)
 
                 cur.execute(
-                    "UPDATE queue SET type=%s WHERE id=%s;",
-                    (Queue.POPPED, id),
+                    "DELETE FROM queue WHERE type=%s",
+                    (id,),
                 )
 
                 return song
@@ -96,3 +95,26 @@ class Queue(object):
             for count, in cur:
                 return int(count)
             return 0
+
+    def __iter__(self):
+        return self.iterate(amount=5)
+
+    def iterate(self, amount=5):
+        """
+        Iterates over the queue without popping.
+
+        :param amount: The amount of items to return, limited to max 100
+        :returns: Generator of :class:`Song` objects.
+        """
+        # Limit to 100 results, just because we can.
+        amount = amount if amount <= 100 else 100
+
+        with Cursor() as cur:
+            cur.execute(
+                "SELECT trackid, meta, length FROM queue ORDER BY "
+                    "time ASC LIMIT %s;",
+                (amount,),
+            )
+
+            for id, meta, length in cur:
+                yield Song(id, meta, length)
