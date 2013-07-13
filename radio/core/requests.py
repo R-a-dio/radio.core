@@ -33,11 +33,24 @@ def request(song, identifier):
     # Check if the user is allowed to request
     if not can_request(identifier):
         raise RequestError("You need to wait longer before"
-                               "requesting again.")
+                            "requesting again.")
 
     queue = Queue()
     queue.put(RequestSong(song, identifier))
 
+    # Update our time records, don't want unlimited requests.
+    with Cursor() as cur:
+        count = cur.execute(
+            "UPDATE nickrequesttime SET time=NOW() WHERE ip=%s;",
+            (identifier,),
+        )
+        if count == 0:
+            cur.execute(
+                "INSERT INTO nickrequesttime (ip) VALUES (%s);",
+                (identifier,),
+            )
+
+    # Send a generic event for requests.
     events.send("song_request", song)
 
     return None
