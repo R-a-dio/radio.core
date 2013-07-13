@@ -1,0 +1,6 @@
+database:
+    host: localhost # Host of the database
+    user: self      # Username for database
+    pass: password  # The password
+    name: name      # The database name
+    

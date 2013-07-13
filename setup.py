@@ -11,5 +11,10 @@ setup(
     author_email="radio@wessie.info",
     url="http://github.com/R-a-dio/radio.core",
     namespace_packages=["radio"],
+    install_requires=[
+        "hurler",
+        "pymysql",
+    ],
+    packages=["radio"],
     tests_require=["pytest"],
 )
