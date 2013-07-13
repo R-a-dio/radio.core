@@ -5,7 +5,7 @@ import io
 import kaptan
 
 
-def load_configuration(filename):
+def load_configuration(config, filename):
     """
     Loads a configuration file specified by `filename`
     with the help of the kaptan library.
@@ -16,6 +16,16 @@ def load_configuration(filename):
     :raises: Any errors from `io.open` and `import_config`.
     """
     with io.open(filename, "r", encoding="utf8") as f:
-        c = kaptan.Kaptan(handler="yaml")
-        c.import_config(f.read())
+        config.import_config(f.read())
+    return config
+
+
+def create_configuration(filename=None):
+    """
+    Creates a Configuration instance, this can be passed to load_configuration
+    together with a filename to load a configuration file.
+    """
+    c = kaptan.Kaptan(handler="yaml")
+    if filename is not None:
+        load_configuration(c, filename)
     return c

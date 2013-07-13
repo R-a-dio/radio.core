@@ -14,6 +14,8 @@ setup(
     install_requires=[
         "hurler",
         "pymysql",
+        "kaptan",
+        "mutagen",
     ],
     packages=["radio.core"],
     tests_require=["pytest"],

@@ -38,6 +38,7 @@ class Cursor(object):
             )
 
         self.conn = conn
+        self.cursor_type = cursor_type
 
     def __enter__(self):
         self.cursor = self.conn.cursor(self.cursor_type)
