@@ -15,6 +15,6 @@ setup(
         "hurler",
         "pymysql",
     ],
-    packages=["radio"],
+    packages=["radio.core"],
     tests_require=["pytest"],
 )
