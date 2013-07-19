@@ -33,6 +33,7 @@ class Cursor(object):
                 user=config.get("database.user", None),
                 passwd=config.get("database.pass", None),
                 db=config.get("database.name", None),
+                port=config.get("database.port", None),
                 charset="utf8",
                 use_unicode=True,
             )

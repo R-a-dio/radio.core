@@ -2,11 +2,10 @@ from __future__ import unicode_literals
 from __future__ import absolute_import
 import math
 import datetime
+import time
 
 from . import events
 from .cursor import Cursor
-from .song import Song
-from .queue import Queue, RequestSong
 
 
 REQUEST_DELAY = datetime.timedelta(hours=1)
@@ -80,7 +79,7 @@ def can_request(identifier):
     return False
 
 
-def requestable(song):
+def requestable_song(song):
     """
     Helper function that returns True if the song given can be requested.
     """
@@ -92,19 +91,20 @@ def requestable(song):
         cur.execute(query, (self.id,))
 
         for count, usable in cur:
-            if usable == 0:
-                # Song isn't playable so we can't request it
-                return False
-        else:
-            # We had no entry with that ID, can't play that what doesn't exist
-            return False
+            return requestable(usable, count, song.lp, song.lr)
+    return False
+
+
+def requestable(usable, requestcount, lp, lr):
+    if not usable:
+        return False
 
     songdelay = calculate_delay(requestcount)
 
     now = time.time()
-    if song.lp and songdelay > (now - song.lp):
+    if lp and songdelay > (now - lp):
         return False # the song delay has not passed for lp
-    if song.lr and songdelay > (now - song.lr):
+    if lr and songdelay > (now - lr):
         return False # the song delay has not passed for lr
     return True
 
@@ -123,3 +123,7 @@ def calculate_delay(val):
         return -11057 * val ** 2 + 172954 * val + 81720
     else:
         return long(599955 * math.exp(0.0372 * val) + 0.5)
+
+
+from .song import Song
+from .queue import Queue, RequestSong

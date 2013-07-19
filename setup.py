@@ -4,7 +4,7 @@ from setuptools import setup
 
 setup(
     name="radio.core",
-    version="0.1.0",
+    version="0.1.1",
     license="BSD",
     description="Core modules for R/a/dio code base",
     author="Wesley Bitter",
